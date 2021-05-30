@@ -1,0 +1,59 @@
+#! /bin/bash
+
+# LAMP installation
+
+# APT Update and DNS entries
+
+sudo apt update
+sudo echo -e "      nameservers:\n          addresses: [8.8.8.8, 8.8.4.4]" >> /etc/netplan/01-network-manager-all.yaml
+sudo netplan apply
+
+# Apache2
+
+sudo apt install -y apache2
+sudo systemctl enable apache2
+
+# PHP 
+
+sudo apt install -y libapache2-mod-php php-imagick php-common php-curl php-gd php-imap php-intl php-json php-mbstring php-mysql php-ssh2 php-xml php-zip
+echo "<?php
+
+phpinfo();
+
+?>" > /var/www/html/test.php
+sudo systemctl restart apache2
+
+# Joomla Install/Config
+
+ver=3-8-3
+wget https://downloads.joomla.org/cms/joomla3/$ver/Joomla_$ver-Stable-Full_Package.tar.gz
+tar -xvzf Joomla_$ver-Stable-Full_Package.tar.gz -C /var/www/html/
+sudo chown -R apache:apache /var/www/html/
+sudo chmod -R 755 /var/www/html/
+sudo sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
+sudo echo "DirectoryIndex index.php" >> /etc/apache2/apache2.conf
+sudo systemctl restart apache2
+
+echo > /etc/logrotate.d/apache2
+{
+echo '/var/log/apache2/*.log {'
+echo '        weekly'
+echo '        missingok'
+echo '        rotate 14'
+echo '        compress'
+echo '        delaycompress'
+echo '        notifempty'
+echo '        create 640 root adm'
+echo '        sharedscripts'
+echo '        postrotate'
+echo '                if invoke-rc.d apache2 status > /dev/null 2>&1; then \'
+echo '                    invoke-rc.d apache2 reload > /dev/null 2>&1; \'
+echo '                fi;'
+echo '        endscript'
+echo '        prerotate'
+echo '                if [ -d /etc/logrotate.d/httpd-prerotate ]; then \'
+echo '                        run-parts /etc/logrotate.d/httpd-prerotate; \'
+echo '                fi; \'
+echo '        endscript'
+echo '}'
+} >> /etc/logrotate.d/apache2
