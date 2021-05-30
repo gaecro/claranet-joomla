@@ -1,9 +1,12 @@
 vpc_name         = "vpc_claranet"
+vpc_region       = "eu-west-1"
 vpc_cidr         = "10.0.0.0/16"
 vpc_private_subs = ["10.0.101.0/24", "10.0.102.0/24"]
 vpc_public_subs  = ["10.0.1.0/24", "10.0.2.0/24"]
 image_id         = "ami-0943382e114f188e8"
 instance_type    = "t2.micro"
+asg_min_size     = 1
+asg_max_size     = 3
 email            = "your.email@domain.com"
 db_name          = "joomla_db"
 db_user          = "joomla"

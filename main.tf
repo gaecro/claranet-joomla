@@ -18,7 +18,7 @@ terraform {
 
 provider "aws" {
   profile = "default"
-  region  = "eu-west-1"
+  region  = var.vpc_region
 }
 
 # Use all availability zones for redundancy
@@ -72,8 +72,8 @@ data "aws_subnet_ids" "subnets" {
 resource "aws_autoscaling_group" "mywebservers" {
   name                 = "terraform-asg"
   launch_configuration = aws_launch_configuration.mywebservers.name
-  min_size             = 1
-  max_size             = 3
+  min_size             = var.asg_min_size
+  max_size             = var.asg_max_size
   health_check_type    = "ELB"
   target_group_arns    = [aws_lb_target_group.test.arn, aws_lb_target_group.test443.arn]
   lifecycle {

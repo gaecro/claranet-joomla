@@ -1,5 +1,10 @@
 
 
+variable "vpc_region" {
+  description = "The name of your new VPC region"
+  type = string
+}
+
 variable "vpc_name" {
   description = "The name of your new VPC"
   type = string
@@ -28,6 +33,16 @@ variable "image_id" {
 variable "instance_type" {
   description = "Type of instance to provision"
   type = string
+}
+
+variable "asg_min_size" {
+  description = "Autoscaling group - minimun number of EC2"
+  type = number
+}
+
+variable "asg_max_size" {
+  description = "Autoscaling group - maximun number of EC2"
+  type = number
 }
 
 variable "email" {
