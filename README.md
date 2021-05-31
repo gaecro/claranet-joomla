@@ -37,3 +37,8 @@ Here you'll find a bash script which will install LAMP (without mysql as a separ
 terraform init  
 terraform plan  
 terraform apply
+
+### Start configuring Joomla through their UI
+
+To open the Joomla UI and start configuring it, please use the DNS name of the ELB appending the page addrress "/index.php"  
+i.e. http://test-lb-tf-1563006515.eu-west-1.elb.amazonaws.com/index.php
